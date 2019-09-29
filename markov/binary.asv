@@ -1,12 +1,11 @@
 %% construct binary image
-% philosophical reasoning: shouldn't use trueMatrix to estimate imageMatrix
 clear all
 y = [1 1 0]'; % corresponds to 2
 b = [0 0.3 1]'; % corresponds to 1
 colours = [b y];
 
 %create image tensor
-M = 5; % base pixel unit
+M = 3; % base pixel unit
 B = 16*M;
 H = 10*M;
 
@@ -119,8 +118,8 @@ for n = 1+1:H-1
 end
 
 idx = sub2ind(size(imageMatrix), inner(:,1), inner(:,2));
-for j = 1:size(neighbors, 2) 
-    idx2 = sub2ind(size(imageMatrix), neighbors(:,j,1), neighbors(:,j,2)); 
+for j = 1:size(neighbors, 2) % currently not working; neither reshape nor normal
+    idx2 = sub2ind(size(imageMatrix), neighbors(:,j,1), neighbors(:,j,2)); % fixa nigger
     neighborMatrix(:,j) = imageMatrix(idx2);
 end
 imageMatrix(idx) = ICMevaluate(neighborMatrix, trueMatrix(idx), imageMatrix(idx));

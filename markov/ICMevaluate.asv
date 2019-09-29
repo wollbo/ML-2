@@ -1,0 +1,21 @@
+function imageMatrix = ICMevaluate(neighbors, trueImage, imageMatrix)
+% evaluation step of ICM
+y = imageMatrix;
+x = trueImage;
+K = length(neighbors);
+yflipped = y;
+yflipped(y==1) = 2;
+yflipped(y==2) = 1;
+% needs to access imageMatrix(neighbors) where neighbors,3 ranged from 2 to
+% 4 neighbors per point
+
+for k= 1:K
+    unflipped(k) = energy(x(k),y(k),neighbors(k,:));
+    flipped(k) = energy(x(k),yflipped(k),neighbors(k,:));
+end
+
+evaluated = min(unflipped(i),flipped(i)); % corresponds to new y
+imageMatrix(evaluated==flipped) = y
+
+imageMatrix = I; % needs to be accessed through imageMatrix(idx)
+end
