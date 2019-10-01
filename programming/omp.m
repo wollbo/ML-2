@@ -6,7 +6,7 @@ M = 50;
 A = randn(N,M);
 b = randn(N,1);
 x = zeros(M,1);
-x(1) = 1;
+x(1:5) = 1;
 
 %%
 
@@ -35,7 +35,7 @@ while (norm(r)>alpha && length(numSpace) > 1)
     epsilon = 0;
 end
 x = rVec(S);
-%
+
 %AT  AAT ?1
 %    x = (A*A')\A'*b %% subject to constraints??
 %    r = b-A*x

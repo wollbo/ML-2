@@ -77,10 +77,9 @@ disp('done')
 ensemble = zeros(5,N);
 for n = 1:5 
     for m = 1:10
-        z = k_ensemble(:,:,n,m)'*(K_ensemble(:,:,n,m)+lambda*I)\t;
-        [~,guess] = max(z,[],2);
-    end
-    ensemble(n,m,:) = guess;
+        z = k_
+    [~,guess] = max(out);
+    ensemble(k,:) = guess;
 end
 guess = mode(ensemble,1);
 error = length(targets(targets~=guess'))/M
