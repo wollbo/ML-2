@@ -1,12 +1,13 @@
 %% construct binary image
-% philosophical reasoning: shouldn't use trueMatrix to estimate imageMatrix
+% error in neighborMatrix construction. remember how indexing relates to
+% dimensions!!
 clear all
 y = [1 1 0]'; % corresponds to 2
 b = [0 0.3 1]'; % corresponds to 1
 colours = [b y];
 
 %create image tensor
-M = 5; % base pixel unit
+M = 20; % base pixel unit
 B = 16*M;
 H = 10*M;
 
@@ -79,7 +80,7 @@ neighborsC(4,:,:) = [H-1 B; H B-1]; %BH
 
 for n = 1:H-2
     for m = 1:B-2
-        neighbors(n,m,:,:) = [n+1 m ;n m+1; n+1  m+2; n+2  m+1];
+        neighbors(n,m,:,:) = [n+1 m ;n m+1; n+1  m+2; n+2  m+1]; % wrong?
     end
 end
 
@@ -92,12 +93,12 @@ neighbors = squeeze(reshape(neighbors, [(B-2)*(H-2) 1 4 2])); % needs to maintai
 % imageMatrix
 C = [1 1;H 1; 1 B; H B]; % can be constructed intelligently for border \ corner + middle
 idxC = sub2ind(size(imageMatrix), C(:,1), C(:,2));
-imageMatrix(idxC); % über haxx god
+imageMatrix(idxC); % 
 for j = 1:size(neighborsC, 2)
     idx2 = sub2ind(size(imageMatrix), neighborsC(:,j,1), neighborsC(:,j,2));
     neighborMatrixC(:,j) = imageMatrix(idx2);
 end
-imageMatrix(idxC) = ICMevaluate(neighborMatrixC, trueMatrix(idxC), imageMatrix(idxC)); % evaluates energy of corners, and flips accordingly
+imageMatrix(idxC) = ICMevaluate(neighborMatrixC, imageMatrix(idxC)); % evaluates energy of corners, and flips accordingly
 
 borderL = [(2:H-1)' ones(H-2,1)];
 borderR = [(2:H-1)' B.*ones(H-2,1)];
@@ -110,9 +111,9 @@ for j = 1:size(neighborsL, 2)
     idx2 = sub2ind(size(imageMatrix), neighborsL(:,j,1), neighborsL(:,j,2));
     neighborMatrixL(:,j) = imageMatrix(idx2);
 end
-imageMatrix(idxL) = ICMevaluate(neighborMatrixL, trueMatrix(idxL), imageMatrix(idxL));
+imageMatrix(idxL) = ICMevaluate(neighborMatrixL, imageMatrix(idxL));
 
-%%
+%% här kan det vara fel. fel även i left
 inner = [];
 for n = 1+1:H-1
     inner = [inner; n*ones(B-2,1) (2:B-1)'];
@@ -123,7 +124,8 @@ for j = 1:size(neighbors, 2)
     idx2 = sub2ind(size(imageMatrix), neighbors(:,j,1), neighbors(:,j,2)); 
     neighborMatrix(:,j) = imageMatrix(idx2);
 end
-imageMatrix(idx) = ICMevaluate(neighborMatrix, trueMatrix(idx), imageMatrix(idx));
+imageMatrix(idx) = ICMevaluate(neighborMatrix, imageMatrix(idx));
+
 
 %%
 for i = 1:H
