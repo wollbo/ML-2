@@ -1,0 +1,1 @@
+%% modify ICMevaluate and energy to take greyscale vector
