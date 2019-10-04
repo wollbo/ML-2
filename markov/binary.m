@@ -1,13 +1,13 @@
 %% construct binary image
 % error in neighborMatrix construction. remember how indexing relates to
 % dimensions!!
-clear all
+%clear all
 y = [1 1 0]'; % corresponds to 2
 b = [0 0.3 1]'; % corresponds to 1
 colours = [b y];
 
 %create image tensor
-M = 100; % base pixel unit
+M = 10; % base pixel unit
 B = 16*M;
 H = 10*M;
 
@@ -112,18 +112,18 @@ for k = 1:10
 [neighborMatrix, idx] = indexToNeighbor(imageMatrix,better,neighbors);
 imageMatrix(idx) = ICMevaluate(neighborMatrix, imageMatrix(idx));
     
-%% evaluates energy of corners, and flips accordingly
+% evaluates energy of corners, and flips accordingly
 [neighborMatrixC, idxC] = indexToNeighbor(imageMatrix,borderC,neighborsC);
 imageMatrix(idxC) = ICMevaluate(neighborMatrixC, imageMatrix(idxC));
 
-%%
+%
 [neighborMatrixL, idxL] = indexToNeighbor(imageMatrix,borderL,neighborsL);
 imageMatrix(idxL) = ICMevaluate(neighborMatrixL, imageMatrix(idxL));
-%%
+%
 [neighborMatrixR, idxR] = indexToNeighbor(imageMatrix,borderR,neighborsR);
 imageMatrix(idxR) = ICMevaluate(neighborMatrixR, imageMatrix(idxR));
 
-%%
+%
 [neighborMatrixT, idxT] = indexToNeighbor(imageMatrix,borderT,neighborsT);
 imageMatrix(idxT) = ICMevaluate(neighborMatrixT, imageMatrix(idxT));
 
