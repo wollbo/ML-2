@@ -1,5 +1,5 @@
 %% init
-clear all
+%clear all
 
 N = 40; % N<M
 M = 50;
@@ -25,14 +25,13 @@ while (norm(r)>alpha && length(numSpace) > 1)
     for j = 1:size(A,2)
         z(j) = A(:,j)'*r/norm(A(:,j)).^2; epsilon(j) = norm(A(:,j)*z(j)-r).^2;
     end
-    disp('AAA')
     [~,J1] = min(epsilon(numSpace));
     J0 = numSpace(J1);
     S = [S J0];
     numSpace(J1) = [];
     rVec(S) = A(:,S)'*((A(:,S)*A(:,S)')\b);
     r = b-A(:,S)*rVec(S);
-    epsilon = 0;
+    %epsilon = 0;
 end
 x = rVec(S);
 
