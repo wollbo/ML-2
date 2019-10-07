@@ -97,19 +97,14 @@ borderR = [(2:H-1)' B.*ones(H-2,1)];
 borderT = [ones(B-2,1) (2:B-1)'];
 borderB = [H.*ones(B-2,1) (2:B-1)'];
 inner = [];
-for n = 1+1:H-1
-    inner = [inner; n*ones(B-2,1) (2:B-1)'];
-end
-
-better = [];
 for m = 2:B-1
-    better = [better; (2:H-1)' m*ones(H-2,1)];
+    inner = [inner; (2:H-1)' m*ones(H-2,1)];
 end
 
 %%
 for k = 1:10
 % best to do inner loop first since
-[neighborMatrix, idx] = indexToNeighbor(imageMatrix,better,neighbors);
+[neighborMatrix, idx] = indexToNeighbor(imageMatrix,inner,neighbors);
 imageMatrix(idx) = ICMevaluate(neighborMatrix, imageMatrix(idx));
     
 % evaluates energy of corners, and flips accordingly

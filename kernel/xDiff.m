@@ -12,7 +12,7 @@ else
 N = size(x,1);
 M = size(y,1);
 xmat = zeros(M,N);
-for m = 1:M-1
+for m = 1:M
     xdiff = x-y(m,:);
     xmat(m,:) = vecnorm(xdiff,2,2)';
 end

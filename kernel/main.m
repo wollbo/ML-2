@@ -1,8 +1,6 @@
 addpath datasets
 folder = 'datasets/cifar';
-% error in k_ensemble
-% everything else looks good
-
+% should be alright now
 N = 1000;
 K_ensemble = zeros(N,N,5,10);
 for k = 1:5
@@ -54,9 +52,9 @@ for l = 1:5
 load([char(folder) '/data_batch_' num2str(l) '.mat'])
 x = double(data);
 x = x./max(max(x));
-sigma = 10; % to avoid rounding to zero on non diagonal elements
+sigma = 100; % to avoid rounding to zero on non diagonal elements
 for j = 1:10
-    testDiff = xDiff(x(1+(j-1)*N:N*j,:),testData(1:M,:)); % wrong. all elements large, bottom row zeroes
+    testDiff = xDiff(x(1+(j-1)*N:N*j,:),testData(1:M,:)); % 
     k_ensemble(:,:,l,j) = matGaussK(testDiff,sigma);
 end
 disp(l)

@@ -1,0 +1,17 @@
+%% modify ICMevaluate and energy to take greyscale vector
+
+addpath datasets/image
+folder = 'datasets/image';
+imageMatrix = imread([folder '/lena_gray.gif']);
+
+L = length(imageMatrix);
+
+
+%%
+
+
+p = 0.1;
+flipM=binornd(1,p*ones([L L]));
+flipped = imageMatrix(flipM==1);
+flipped = randi(255,,1,'uint32');
+
