@@ -61,7 +61,7 @@ for m = 2:L-1
 end
 
 %% might take too much time with N=256. Then, quantize s.t. we get 8 values uniformly between 1:256
-
+for k = 1:10
 % best to do inner loop first 
 [neighborMatrix, idx] = indexToNeighbor(imageMatrix,inner,neighbors);
 imageMatrix(idx) = ICMevaluate2(neighborMatrix, imageMatrix(idx),N); 
@@ -81,5 +81,7 @@ imageMatrix(idxT) = ICMevaluate2(neighborMatrixT, imageMatrix(idxT),N);
 [neighborMatrixB, idxB] = indexToNeighbor(imageMatrix,borderB,neighborsB);
 imageMatrix(idxB) = ICMevaluate2(neighborMatrixB, imageMatrix(idxB),N);
 
+imshow(imageMatrix)
+end
 
 
