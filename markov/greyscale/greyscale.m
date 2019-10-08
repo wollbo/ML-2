@@ -6,6 +6,7 @@ imageMatrix = imread([folder '/lena_std'],'tif');
 
 L = length(imageMatrix);
 imageMatrix = rgb2gray(imageMatrix);
+trueMatrix = imageMatrix;
 N = 256; %8bit
 %N = 8;
 
@@ -17,6 +18,7 @@ flipM=binornd(1,p*ones([L L]));
 flipped = imageMatrix(flipM==1);
 flipped = randi(255,length(flipped),1,'uint8');
 imageMatrix(flipM==1) = flipped;
+flippedMatrix = imageMatrix;
 
 % neighborspaghetti from binary
 
@@ -84,4 +86,9 @@ imageMatrix(idxB) = ICMevaluate2(neighborMatrixB, imageMatrix(idxB),N);
 imshow(imageMatrix)
 end
 
+%%
+f1 = figure('Name','figures/subplotCompare')
+subplot(1,3,1), imshow(trueMatrix)
+subplot(1,3,2), imshow(flippedMatrix)
+subplot(1,3,3), imshow(imageMatrix)
 
