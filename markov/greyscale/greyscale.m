@@ -63,6 +63,7 @@ for m = 2:L-1
 end
 
 %% might take too much time with N=256. Then, quantize s.t. we get 8 values uniformly between 1:256
+tic
 for k = 1:10
 % best to do inner loop first 
 [neighborMatrix, idx] = indexToNeighbor(imageMatrix,inner,neighbors);
@@ -85,7 +86,7 @@ imageMatrix(idxB) = ICMevaluate2(neighborMatrixB, imageMatrix(idxB),N);
 
 imshow(imageMatrix)
 end
-
+toc
 %%
 f1 = figure('Name','figures/subplotCompare')
 subplot(1,3,1), imshow(trueMatrix)
