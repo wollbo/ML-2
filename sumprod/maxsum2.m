@@ -7,12 +7,6 @@ trueMatrix = double(imageMatrix);
 N = 256; %8bit
 M = length(imageMatrix);
 
-%% Gaussian noise
-
-noiseMatrix = randn(M)*30;
-flippedMatrix = round(double(imageMatrix) + noiseMatrix);
-flippedMatrix(flippedMatrix<1) = 1;
-flippedMatrix(flippedMatrix>256) = 256;
 
 %% GF(2^k) noise
 
@@ -37,33 +31,34 @@ priorProbs = zeros(K);
 for k = 1:K
     priorProbs(k,:) = normpdf(support,support(k),2);
 end
+%% %% p(x(k)|x(k-1), x(k+1)) from histogram
 
-%% p(y|x) assuming x uniformly distributed, GF(2^K) noise case
-
-support = 1:256;
-K = length(support);
-priorProbs = 1/N * ones(K) + eye(K)*(1-p-1/N);
-
-%% p(x(k)|x(k-1)) from histogram
-
-hists = condHist(imageChain,K);
+kminusCounts = zeros(K,K,K);
+for l = 2:L-1
+kminusCounts(imageChain(l),imageChain(l-1),imageChain(l+1)) = kminusCounts(imageChain(l),imageChain(l-1),imageChain(l+1)) + 1;
+end
+histProbs = kminusCounts;
+for k = 1:K
+    for j = 1:K
+        if sum(histProbs(k,j,:))>0
+        histProbs(k,j,:) = histProbs(k,j,:)./sum(histProbs(k,j,:));% represents p(x_k = i | x_k-1 = j, x_k+1 = l) in matrix form K_ijl
+        end 
+    end
+end
 
 %%
-
 muXF = zeros(L,K);
 muFX = zeros(L,1);
 muPhi = log(priorProbs(imageChain(1),:)); % log necessary in larger images
 muXF(1,:) = muPhi;
 indX = zeros(L,1);
 indX(1) = imageChain(1);
-for l = 2:L % forward loop, only smoothes the picture without removing noise
-    [muFX(l),indX(l)] = max(log(histProbs(imageChain(l),:)) + muXF(l-1,:));
+for l = 2:L-1 % forward loop, only smoothes the picture without removing noise
+    [muFX(l),indX(l)] = max(log(histProbs(imageChain(l),:,imageChain(l-1))) + muXF(l-1,:));
     muXF(l,:) = muFX(l);%+log(priorProbs(imageChain(l),:));
 end
 disp('done')
-%[~,xN] = max(log(histProbs(imageChain(l),:)) + muXF(l-1,:))
 
-   
 %%
 
 imageMatrix2 = uint8(makeImage(indX));
