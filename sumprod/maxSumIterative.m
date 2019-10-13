@@ -11,7 +11,7 @@ N = 256; %8bit
 M = length(imageMatrix);
 %% GF(2^k) noise
 
-p = 0.05;
+p = 0.1;
 flipM=binornd(1,p*ones([M M]));
 flipped = imageMatrix(flipM==1);
 flipped = randi(N,length(flipped),1,'uint8');
@@ -19,12 +19,11 @@ imageMatrix(flipM==1) = flipped;
 flippedMatrix = imageMatrix;
 noisyMatrix = uint8(flippedMatrix);
 
-mseNoisy = mean(mean((double(noisyMatrix)-trueMatrix).^2))
-imshow(noisyMatrix)
+mseNoisy = mean(mean((double(noisyMatrix)-trueMatrix).^2));
 
 %% Create image Chain
 
-imageChain = makeChain(flippedMatrix);
+imageChain = makeChain(flippedMatrix,1);
 decodedChain = zeros(size(imageChain));
 L = length(imageChain);
 
@@ -61,8 +60,18 @@ for l = 2:L % sort of works with GF(2^K) noise
 end
 disp('done')
 
-imageMatrixFiltered = uint8(makeImage(indX));
-mseFiltered = mean(mean((double(imageMatrixFiltered)-trueMatrix).^2))
-imshow(imageMatrixFiltered)
-imageChain = makeChain(imageMatrixFiltered);
+imageMatrixFiltered = uint8(makeImage(indX,(mod(i-1,2)+1)));
+mseFiltered = mean(mean((double(imageMatrixFiltered)-trueMatrix).^2));
+imageChain = makeChain(imageMatrixFiltered,(mod(i,2)+1));
 end
+
+
+%%
+f1 = figure('Name','figures/subplotCompare')
+subplot(1,2,1), imshow(noisyMatrix);
+subplot(1,2,2), imshow(imageMatrixFiltered);
+
+%imshowpair(noisyMatrix,imageMatrixFiltered) shows which noise elements
+%were removed
+
+ratio = mseFiltered/mseNoisy
