@@ -36,28 +36,19 @@ K = length(support);
 
 probs = conds(50,:);
 rawdata = raw(50,:);
-rawz = []; %preallocate through sum(rawdata)
-for k = 1:length(rawdata)
+nMeasurements = sum(raw);
+rawz = [];
+for k = 1:sum(rawdata)
     for l = 1:rawdata(k)
-        rawz = [rawz k];
-    end
+        rawz = 
 end
-x = rawz;
-%%
-[~,mu0] = max(probs); 
+[~,mu0] = max(x); 
 N = length(x);
 lambda0 = 0.1;
-a0 = 1;
-b0 = 1;
-eTau = 0.001;
-for k = 1:100
-muN = (sum(x) + lambda0*mu0)/(N+lambda0);
+eTau = 1;
+muN = sum(x + lambda0*mu0)/(N+lambda0);
 lambdaN = eTau*(N+lambda0);
 eMu = expectationMu(x,mu0,lambda0,muN,lambdaN);
 aN = a0 + (N+1)/2;
 bN = b0 + 1/2 * eMu;
 eTau = aN/bN;
-end
-plot(conds(50,:))
-hold on
-plot(normpdf(support,muN,1/lambdaN))
