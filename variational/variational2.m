@@ -1,5 +1,5 @@
 %% variational2
-
+clear all
 addpath datasets/image
 folder = 'datasets/image';
 imageMatrix = imread([folder '/lena_std'],'tif');
@@ -24,40 +24,59 @@ decodedChain = zeros(size(imageChain));
 L = length(imageChain);
 
 %%
-support = 0:255;
+support = 1:256;
 K = length(support);
-[conds,raw] = condHist(imageChain,K); % to be modeled term wise as a gaussian!
 
-
-%%
-
-% prior p(mu|tau) = N(mu|mu_0, (gamma_0 * tau)^-1
-% p(tau) = Gam(tau|a0,b0) = 1/gamma(a0)*b0^a0 * tau^(a0-1) * exp(-b0 * tau)
-
-probs = conds(50,:);
-rawdata = raw(50,:);
-rawz = []; %preallocate through sum(rawdata)
-for k = 1:length(rawdata)
-    for l = 1:rawdata(k)
-        rawz = [rawz k];
-    end
-end
-x = rawz;
-%%
-[~,mu0] = max(probs); 
-N = length(x);
-lambda0 = 0.1;
+%% general case
+[conds,raw] = condHist(imageChain,K);
+epochs = 1; % if too high, might cause some distributions to collapse
+lambda0 = 0.0001; %lambda0 too large means that the mean gets searched for in a small area - too small to contain any samples!
 a0 = 1;
 b0 = 1;
-eTau = 0.001;
-for k = 1:100
-muN = (sum(x) + lambda0*mu0)/(N+lambda0);
-lambdaN = eTau*(N+lambda0);
-eMu = expectationMu(x,mu0,lambda0,muN,lambdaN);
-aN = a0 + (N+1)/2;
-bN = b0 + 1/2 * eMu;
-eTau = aN/bN;
+eTau = 0.00001; % needs to be small initially, often evaluates to 0 if lambda0 is too large! 
+[~,mu0] = max(conds,[],2);
+mu = zeros(K,1);
+sigma = mu;
+normpdfs = zeros(K); % tentative
+for k = 1:K % cant get 256 different differences, only 255!
+    %while sigma(k) < 1 % to prevent collapsed data
+    [mu(k),sigma(k)] = uniGaussian(raw(k,:),conds(k,:),mu0(k),lambda0,a0,b0,eTau,epochs);
+    disp(k)
+    %end
+    normpdfs(k,:) = normpdf(support,mu(k),sigma(k));
 end
-plot(conds(50,:))
-hold on
-plot(normpdf(support,muN,1/lambdaN))
+
+%%
+surf(normpdfs(30:230,:)) % can replace histProbs in maxsum ! works!
+%%
+support = 1:256;
+K = length(support);
+priorProbs = zeros(K);
+for k = 1:K
+    priorProbs(k,:) = normpdf(support,support(k),2);
+end
+
+%%
+histProbs = condHist(imageChain,K);
+span = 30:230;
+histProbs(span,:) = normpdfs(span,:);
+muXF = zeros(L,K);
+muFX = zeros(L,1);
+muPhi = log(priorProbs(imageChain(1),:)); % log necessary in larger images
+muXF(1,:) = muPhi;
+indX = zeros(L,1);
+indX(1) = imageChain(1);
+for l = 2:L % forward loop, only smoothes the picture without removing noise
+    [muFX(l),indX(l)] = max(log(histProbs(imageChain(l),:)) + muXF(l-1,:));
+    muXF(l,:) = muFX(l);%+log(priorProbs(imageChain(l),:));
+end
+disp('done')
+
+%%
+imageMatrix2 = uint8(makeImage(indX,1));
+noisyMatrix = uint8(flippedMatrix);
+imshow(imageMatrix2)
+mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));
+mse2 = mean(mean((double(noisyMatrix)-trueMatrix).^2));
+
+ratio = mse1/mse2

@@ -46,7 +46,7 @@ priorProbs = 1/N * ones(K) + eye(K)*(1-p-1/N);
 
 %% p(x(k)|x(k-1)) from histogram
 
-hists = condHist(imageChain,K);
+histProbs = condHist(imageChain,K);
 
 %%
 
@@ -66,7 +66,7 @@ disp('done')
    
 %%
 
-imageMatrix2 = uint8(makeImage(indX));
+imageMatrix2 = uint8(makeImage(indX,1));
 noisyMatrix = uint8(flippedMatrix);
 imshow(imageMatrix2)
 mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));
