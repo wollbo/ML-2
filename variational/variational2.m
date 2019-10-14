@@ -47,6 +47,7 @@ for k = 1:K % cant get 256 different differences, only 255!
 end
 
 %%
+f1 = figure('Name','figures/normpdfsSurf')
 surf(normpdfs(30:230,:)) % can replace histProbs in maxsum ! works!
 %%
 support = 1:256;
@@ -80,3 +81,8 @@ mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));
 mse2 = mean(mean((double(noisyMatrix)-trueMatrix).^2));
 
 ratio = mse1/mse2
+%%
+f1 = figure('Name','figures/subplotCompareVariational')
+subplot(1,2,1), imshow(noisyMatrix);
+subplot(1,2,2), imshow(imageMatrix2);
+suptitle(['MSE ratio = ' num2str(ratio)])

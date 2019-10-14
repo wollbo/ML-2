@@ -19,7 +19,7 @@ flippedMatrix = imageMatrix;
 
 %% Create image Chain
 
-imageChain = makeChain(flippedMatrix);
+imageChain = makeChain(flippedMatrix,1);
 decodedChain = zeros(size(imageChain));
 L = length(imageChain);
 
@@ -61,7 +61,7 @@ disp('done')
 
 %%
 
-imageMatrix2 = uint8(makeImage(indX));
+imageMatrix2 = uint8(makeImage(indX,1));
 noisyMatrix = uint8(flippedMatrix);
 imshow(imageMatrix2)
 mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));

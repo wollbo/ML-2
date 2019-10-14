@@ -62,6 +62,7 @@ eTau = aN/bN; % unstable, but ought to be used.
 end
 
 %%
+f1 = figure('Name', 'figures/oneCond')
 plot(conds(128,:))
 hold on
 plot(normpdf(support,muN,sqrt(1/eTau)))

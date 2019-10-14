@@ -18,7 +18,7 @@ flippedMatrix = imageMatrix;
 
 %%
 
-imageChain = makeChain(flippedMatrix);
+imageChain = makeChain(flippedMatrix,1);
 decodedChain = zeros(size(imageChain));
 L = length(imageChain);
 
