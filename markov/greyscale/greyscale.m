@@ -88,8 +88,13 @@ imageMatrix(idxB) = ICMevaluate2(neighborMatrixB, imageMatrix(idxB),N);
 end
 toc
 %%
-f1 = figure('Name','figures/subplotCompare')
-subplot(1,3,1), imshow(trueMatrix)
-subplot(1,3,2), imshow(flippedMatrix)
-subplot(1,3,3), imshow(imageMatrix)
+
+mse1 = mean(mean((double(imageMatrix)-double(trueMatrix)).^2));
+mse2 = mean(mean((double(flippedMatrix)-double(trueMatrix)).^2));
+ratio = mse1/mse2
+
+f1 = figure('Name','images/subplotCompareMarkov')
+subplot(1,2,1), imshow(flippedMatrix)
+subplot(1,2,2), imshow(imageMatrix)
+suptitle(['MSE ratio = ' num2str(ratio)])
 

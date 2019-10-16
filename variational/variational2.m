@@ -32,8 +32,8 @@ K = length(support);
 epochs = 1; % if too high, might cause some distributions to collapse
 lambda0 = 0.0001; %lambda0 too large means that the mean gets searched for in a small area - too small to contain any samples!
 a0 = 1;
-b0 = 1;
-eTau = 0.00001; % needs to be small initially, often evaluates to 0 if lambda0 is too large! 
+b0 = 10000;
+eTau = 0.0001; % needs to be small initially, often evaluates to 0 if lambda0 is too large! 
 [~,mu0] = max(conds,[],2);
 mu = zeros(K,1);
 sigma = mu;
@@ -47,8 +47,8 @@ for k = 1:K % cant get 256 different differences, only 255!
 end
 
 %%
-f1 = figure('Name','figures/normpdfsSurf')
-surf(normpdfs(30:230,:)) % can replace histProbs in maxsum ! works!
+f2 = figure('Name','figures/normpdfsSurfAbove')
+surf(normpdfs(1:256,:)) % can replace histProbs in maxsum ! works!
 %%
 support = 1:256;
 K = length(support);
@@ -80,7 +80,7 @@ imshow(imageMatrix2)
 mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));
 mse2 = mean(mean((double(noisyMatrix)-trueMatrix).^2));
 
-ratio = mse1/mse2
+
 %%
 f1 = figure('Name','figures/subplotCompareVariational')
 subplot(1,2,1), imshow(noisyMatrix);
