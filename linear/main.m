@@ -2,7 +2,7 @@ addpath datasets
 folder = 'datasets/cifar';
 N = 10000;
 
-lambda = [10^-4 10^-3 10^-2 10^-1 1 10 100 1000 10000];
+lambda = [10^-4 10^-3 10^-2 10^-1 1 10 100 1000 10000 100000];
 
 for l = 1:length(lambda)
 w = zeros(3072,10,5);
@@ -47,6 +47,7 @@ end
 %%
 f1 = figure('Name','figures/errorLinearLambda')
 plot(rate)
+axis([1 length(lambda) 0 1])
 set(gca, 'XTick', 1:length(lambda)); % Change x-axis ticks
 set(gca, 'XTickLabel', lambda);
 title('Error rate with respect to lambda')
