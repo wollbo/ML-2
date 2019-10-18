@@ -7,13 +7,20 @@ folder = 'datasets\cifar';
 
 
 %%
-n = 1000; % number of neurons
+n = 10000; % number of neurons
+N = 10000;
 O_ensemble = zeros(10,n,5);
 w_ensemble = zeros(n,3072,5);
+b = -1 + (2).*rand(n,1);
+B = zeros(n,N);
+
+for i = 1:N
+    B(:,i) = b;
+end
 
 for k = 1:5
     load([char(folder) '/data_batch_' num2str(k) '.mat'])
-    N = 10000;
+
     x = double(data);
     x = x(1:N,:);
     x = x./max(max(x)); % normalize
@@ -31,11 +38,7 @@ for k = 1:5
     lambda = 0.2; % implement crossvalidation
     disp('done')
     w = -1 + (2).*rand(n,P);
-    b = -1 + (2).*rand(n,1);
-    B = zeros(n,N);
-    for i = 1:N
-        B(:,i) = b;
-    end
+
     z = w*x+B;
     y = sigmoid2(z);
     O = (y*y'+lambda*I)\(t*y')';
@@ -59,8 +62,9 @@ end
 t_test = t_test';
 B_test = zeros(n,M);
 for j = 1:M
-    B_test(:,j) = b;
+    B_test(:,j) = -1 + (2).*rand(n,1);
 end
+B_test = B;
 %%
 ensemble = zeros(5,N);
 for k = 1:5 
@@ -73,14 +77,14 @@ error = length(targets(targets~=guess'))/M
 
 
 %% Gradient Method: Optional / doesn't work now, probably because of bad activation function
-eta = 0.01;
-mu = 0.01;
-epochs = 10;
-for i = 1:epochs
-    dO = -(t-out)*(sigmoid2(w*x+B))';
-    [~,dY] = sigmoid2(w*x+B);
-    dw = -O'*(t-out).*dY*x';
-    w = w-eta*dw;
-    O = O-mu*dO;
-    out = O*sigmoid2(w*x+B);
-end
+% eta = 0.01;
+% mu = 0.01;
+% epochs = 10;
+% for i = 1:epochs
+%     dO = -(t-out)*(sigmoid2(w*x+B))';
+%     [~,dY] = sigmoid2(w*x+B);
+%     dw = -O'*(t-out).*dY*x';
+%     w = w-eta*dw;
+%     O = O-mu*dO;
+%     out = O*sigmoid2(w*x+B);
+% end
