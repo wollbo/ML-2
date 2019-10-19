@@ -1,0 +1,36 @@
+%% kernel test 
+
+addpath datasets
+folder = 'datasets/cifar';
+% should be alright now
+N = 1000;
+M = 100;
+K_ensemble = zeros(N,N,5);
+lambda = 100;
+I = eye(N);
+[x, t] = readDataX(folder,N);
+[xTrain,tTrain,xTest,tTest] = scramble(x,t,M);
+
+sigma = 10^3;
+for n = 1:5
+    K_ensemble(:,:,n) = matGaussK(xDiff(xTrain(1+(n-1)*N:n*N,:)),sigma);
+end
+%%
+k_ensemble = zeros(M,N,5);
+
+for m = 1:5
+    testDiff = xDiff(x(1+(m-1)*N:N*m,:),xTest(1:M,:));
+    k_ensemble(:,:,m) = matGaussK(testDiff,sigma);
+end
+%%
+
+ensemble = zeros(N,5);
+for n = 1:5
+    z = k_ensemble(:,:,n)*((K_ensemble(:,:,n)+lambda*I)\k_ensemble(:,:,n)'*tTest);
+    [~,guess] = max(z,[],2);
+    ensemble(:,n) = guess; % guess on whole vector
+end
+
+guess = mode(ensemble,2);
+[~,tTest] = max(tTest,[],2)
+error = length(tTest(tTest~=guess))/M

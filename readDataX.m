@@ -1,4 +1,4 @@
-function [xVec,tVec] = readData(folder,N)
+function [xVec,tVec] = readDataX(folder,N)
 nData = 5;
 %xVec = zeros((nData+1)*N,3072);
 %tVec = zeros((nData+1)*N,10);

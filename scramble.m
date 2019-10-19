@@ -1,6 +1,6 @@
 function [data, labels, testData, testLabels] = scramble(data,labels,M)
 
-L = length(data);
+L = size(data,1);
 indexL = randperm(L,L-M);
 indexM = 1:L;
 indexM(indexL) = [];
