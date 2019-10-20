@@ -41,3 +41,13 @@ for i = 1:M
     pause(0.01)
     drawnow
 end
+
+%%
+
+x = (1:M)';
+y = mu
+dy = sigma;  % made-up error values
+fill([x;flipud(x)],[y-dy;flipud(y+dy)],[.8 .4 .4],'linestyle','none')
+hold on
+line(x,y)
+hold off
