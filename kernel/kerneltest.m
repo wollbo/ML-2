@@ -3,8 +3,8 @@
 addpath datasets
 folder = 'datasets/cifar';
 % should be alright now
-N = 10000;
-M = 10000;
+N = 1000;
+M = 100;
 K_ensemble = zeros(N,N,5);
 lambda = 1;
 I = eye(N);
@@ -12,14 +12,14 @@ I = eye(N);
 [xTrain,tTrain,xTest,tTest] = scramble(x,t,M);
 tic
 %%
-sigma1 = 5*1000;
+sigma1 = 3000;
 for n = 1:5
     K_ensemble(:,:,n) = matGaussK(xDiff(xTrain(1+(n-1)*N:n*N,:)),sigma1);
     disp(n)
 end
 %%
 k_ensemble = zeros(M,N,5);
-sigma2 = 10;
+sigma2 = 3;
 for m = 1:5
     testDiff = xDiff(x(1+(m-1)*N:N*m,:),xTest(1:M,:));
     k_ensemble(:,:,m) = matGaussK(testDiff,sigma2);

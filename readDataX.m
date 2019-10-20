@@ -21,7 +21,7 @@ for k = 1:nData
     tVec = [tVec; t];
     disp(k)
 end
-load([char(folder) '\test_batch.mat'])
+load([char(folder) '/test_batch.mat'])
 x = double(data);
 x = x(1:N,:);
 x = x./max(max(x));

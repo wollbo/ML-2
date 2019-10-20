@@ -12,9 +12,12 @@ N = 256; %8bit
 
 %%
 
-
-p = 0.1;
-flipM=binornd(1,p*ones([L L]));
+pVec = 0.05:0.05:0.7;
+P = length(pVec);
+ratio = zeros(P,1);
+tic
+for p = 1:P
+flipM=binornd(1,pVec(p)*ones([L L]));
 flipped = imageMatrix(flipM==1);
 flipped = randi(255,length(flipped),1,'uint8');
 imageMatrix(flipM==1) = flipped;
@@ -22,7 +25,7 @@ flippedMatrix = imageMatrix;
 
 % neighborspaghetti from binary
 
-%% ICM-algorithm
+% ICM-algorithm
 
 % get neighbors
 % only edge points need special treatment
@@ -62,9 +65,9 @@ for m = 2:L-1
     inner = [inner; (2:L-1)' m*ones(L-2,1)];
 end
 
-%% might take too much time with N=256. Then, quantize s.t. we get 8 values uniformly between 1:256
-tic
-K = 5;
+% might take too much time with N=256. Then, quantize s.t. we get 8 values uniformly between 1:256
+
+K = 1;
 for k = 1:K
 % best to do inner loop first 
 [neighborMatrix, idx] = indexToNeighbor(imageMatrix,inner,neighbors);
@@ -87,14 +90,22 @@ imageMatrix(idxB) = ICMevaluate2(neighborMatrixB, imageMatrix(idxB),N);
 
 end
 toc
-%%
+%
 
 mse1 = mean(mean((double(imageMatrix)-double(trueMatrix)).^2));
 mse2 = mean(mean((double(flippedMatrix)-double(trueMatrix)).^2));
-ratio = mse1/mse2
-
+ratio(p) = mse1/mse2;
+mseVec(p) = mse1;
+end
 f1 = figure('Name','images/subplotCompareMarkov')
 subplot(1,2,1), imshow(flippedMatrix)
 subplot(1,2,2), imshow(imageMatrix)
-suptitle(['MSE ratio = ' num2str(ratio)])
-
+title(['MSE ratio = ' num2str(ratio)])
+%%
+f2 = figure('Name','images/markovMSEratio')
+plot(ratio)
+axis([1 P 0 0.6])
+set(gca, 'XTick', 1:P); % Change x-axis ticks
+set(gca, 'XTickLabel', pVec);
+title('MSE ratio with respect to the pixel flip probability p')
+xlabel('p')
