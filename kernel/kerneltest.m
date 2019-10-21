@@ -12,16 +12,16 @@ I = eye(N);
 [xTrain,tTrain,xTest,tTest] = scramble(x,t,M);
 tic
 %%
-sigma1 = 3000;
+sigma1 = 3;
 for n = 1:5
     K_ensemble(:,:,n) = matGaussK(xDiff(xTrain(1+(n-1)*N:n*N,:)),sigma1);
     disp(n)
 end
 %%
 k_ensemble = zeros(M,N,5);
-sigma2 = 3;
+sigma2 = 300;
 for m = 1:5
-    testDiff = xDiff(x(1+(m-1)*N:N*m,:),xTest(1:M,:));
+    testDiff = xDiff(xTrain(1+(m-1)*N:N*m,:),xTest(1:M,:));
     k_ensemble(:,:,m) = matGaussK(testDiff,sigma2);
     disp(m)
 end
