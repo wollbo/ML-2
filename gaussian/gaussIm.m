@@ -1,3 +1,5 @@
+%%gaussIm
+
 % maxsum
 addpath datasets/image
 folder = 'datasets/image';
@@ -18,7 +20,7 @@ M = length(imageMatrix);
 
 % GF(2^k) noise
 
-pVec = 0.05:0.05:0.7;
+pVec = 0.1;
 P = length(pVec);
 for p = 1:P
 imageMatrix = trueMatrix;
@@ -43,31 +45,22 @@ for k = 1:K
     priorProbs(k,:) = normpdf(support,support(k),2);
 end
 
-% p(y|x) assuming x uniformly distributed, GF(2^K) noise case
-
-support = 1:256;
-K = length(support);
-priorProbs = 1/N * ones(K) + eye(K)*(1-pVec(p)-1/N);
-
 % p(x(k)|x(k-1)) from histogram
-
+beta = 1;
 histProbs = condHist(imageChain,K);
-
-%
-
-muXF = zeros(L,K);
-muFX = zeros(L,1);
-muPhi = log(priorProbs(imageChain(1),:)); % log necessary in larger images
-muXF(1,:) = muPhi;
+Kern = zeros(sqrt(L),sqrt(L),sqrt(L));
+for l = 1:sqrt(L)
+    Kern(:,:,l) = matGaussK(xDiff(imageChain(1+(l-1)*sqrt(L):l*sqrt(L))),1);
+    C = Kern+beta*eye(sqrt(L));
+end
 indX = zeros(L,1);
 indX(1) = imageChain(1);
-for l = 2:L % forward loop, only smoothes the picture without removing noise
-    [muFX(l),indX(l)] = max(log(histProbs(imageChain(l),:)) + muXF(l-1,:));
-    muXF(l,:) = muFX(l);%+log(priorProbs(imageChain(l),:));
+
+%%
+for l = 2:L-1 % forward loop, only smoothes the picture without removing noise
+    k(l) = matGaussK(xDiff(imageChain(1+(l-1)*sqrt(L):l*sqrt(L)),imageChain(l)),1);
 end
 disp('done')
-%[~,xN] = max(log(histProbs(imageChain(l),:)) + muXF(l-1,:))
-
    
 %
 
@@ -80,10 +73,3 @@ ratio(p) = mse1/mse2;
 mseVec(p) = mse1;
 
 end
-%%
-
-f1 = figure('Name','figures/subplotCompareMaxSum')
-
-subplot(1,2,1), imshow(noisyMatrix);
-subplot(1,2,2), imshow(imageMatrix2);
-suptitle(['MSE ratio = ' num2str(ratio)])

@@ -46,7 +46,7 @@ end
 
 x = (1:M)';
 y = mu;
-dy = sigma;  % made-up error values
+dy = sigma;
 fill([x;flipud(x)],[y-dy;flipud(y+dy)],[.8 .4 .4],'linestyle','none')
 hold on
 line(x,y)

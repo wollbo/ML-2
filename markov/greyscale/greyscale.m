@@ -12,16 +12,18 @@ N = 256; %8bit
 
 %%
 
-pVec = 0.05:0.05:0.7;
+pVec = 0.1
 P = length(pVec);
 ratio = zeros(P,1);
 tic
 for p = 1:P
+imageMatrix = trueMatrix;
 flipM=binornd(1,pVec(p)*ones([L L]));
+flippedMatrix = imageMatrix;
 flipped = imageMatrix(flipM==1);
 flipped = randi(255,length(flipped),1,'uint8');
-imageMatrix(flipM==1) = flipped;
-flippedMatrix = imageMatrix;
+flippedMatrix(flipM==1) = flipped;
+imageMatrix = flippedMatrix;
 
 % neighborspaghetti from binary
 
@@ -97,6 +99,8 @@ mse2 = mean(mean((double(flippedMatrix)-double(trueMatrix)).^2));
 ratio(p) = mse1/mse2;
 mseVec(p) = mse1;
 end
+
+%%
 f1 = figure('Name','images/subplotCompareMarkov')
 subplot(1,2,1), imshow(flippedMatrix)
 subplot(1,2,2), imshow(imageMatrix)
