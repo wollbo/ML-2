@@ -6,9 +6,8 @@ folder = 'datasets/cifar';
 N = 1000;
 M = 1000;
 K_ensemble = zeros(N,N,5);
-%lambda = 100;
+lambda = 100;
 
-lambda = [0.000001 0.00001]
 I = eye(N);
 [x, t] = readDataX(folder,N);
 [xTrain,tTrain,xTest,tTest] = scramble(x,t,M);
@@ -21,7 +20,7 @@ for n = 1:5
     K_ensemble(:,:,n) = matGaussK(xDiff(xTrain(1+(n-1)*N:n*N,:)),sigma1);
     disp(n)
 end
-%%
+%
 k_ensemble = zeros(M,N,5);
 sigma2 = 3;
 for m = 1:5
@@ -29,7 +28,7 @@ for m = 1:5
     k_ensemble(:,:,m) = matGaussK(testDiff,sigma2);
     disp(m)
 end
-%%
+%
 toc
 ensemble = zeros(M,5);
 for n = 1:5

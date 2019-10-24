@@ -12,7 +12,7 @@ N = 256; %8bit
 
 %%
 
-pVec = 0.1
+pVec = 0.1:0.1:0.7;
 P = length(pVec);
 ratio = zeros(P,1);
 tic
@@ -96,6 +96,9 @@ toc
 
 mse1 = mean(mean((double(imageMatrix)-double(trueMatrix)).^2));
 mse2 = mean(mean((double(flippedMatrix)-double(trueMatrix)).^2));
+trueMean = mean(mean(double(trueMatrix)));
+filtMean = mean(mean(double(imageMatrix)));
+nmseVec(p) = mean(mean((double(imageMatrix)-double(trueMatrix)).^2))/(trueMean*filtMean);
 ratio(p) = mse1/mse2;
 mseVec(p) = mse1;
 end

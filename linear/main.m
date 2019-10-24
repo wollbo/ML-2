@@ -1,8 +1,7 @@
 addpath datasets
 folder = 'datasets/cifar';
 N = 10000;
-
-lambda = [10^-4 10^-3 10^-2 10^-1 1 10 100 1000 10000 100000];
+lambda = [0.000001 0.00001 0.0001 0.001 0.01 0.1 1 10 100 1000 10000];
 
 for l = 1:length(lambda)
 w = zeros(3072,10,5);

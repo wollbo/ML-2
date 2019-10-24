@@ -3,10 +3,10 @@ addpath datasets
 folder = 'datasets\cifar';
 
 %%
-%n = 1000; %neurons
+%neurons = 1000; %neurons
 %neurons = [10 50 100 500 1000 5000 10000];
-neurons = [1000 2000 3000 4000 5000 6000 7000 8000 9000];
-%lambda = [10^-4 10^-3 10^-2 10^-1 1 10 100 1000 10000 100000];
+neurons = [1000 2000 3000 4000 5000 6000 7000 8000 9000 10000];
+%lambda = [10^-6 10^-5 10^-4 10^-3 10^-2 10^-1 1 10 100 1000 10000];
 lambda = 100;
 N = 10000;
 M = 10000; % size of test set
@@ -21,7 +21,7 @@ for l = 1:length(neurons) % length(lambda)
     B(:,i) = b;
     end
 
-[x, t] = readData(folder,N);
+[x, t] = readDataX(folder,N);
 [xTrain,tTrain,xTest,tTest] = scramble(x,t,M);
 I = eye(neurons(l));
 P = size(xTrain,2);
@@ -37,7 +37,7 @@ for m = 1:5
     z = w*x+B;
     y = sigmoid2(z);
     O = (y*y'+lambda*I)\(t*y')'; %lambda(l)
-    O = O';
+    O = O';e
     out = O*sigmoid2(w*x+B);
     O_ensemble(:,:,m) = O;
     w_ensemble(:,:,m) = w;

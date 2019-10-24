@@ -10,7 +10,7 @@ M = length(imageMatrix);
 
 %% GF(2^k) noise
 
-pVec = 0.05:0.05:0.7;
+pVec = 0.1:0.1:0.7;
 P = length(pVec);
 for p = 1:P
 imageMatrix = trueMatrix;
@@ -82,6 +82,9 @@ mse2 = mean(mean((double(noisyMatrix)-trueMatrix).^2));
 
 mseVec(p) = mse1;
 ratio(p) = mse1/mse2;
+trueMean = mean(mean(double(trueMatrix)));
+filtMean = mean(mean(double(imageMatrix2)));
+nmseVec(p) = mean(mean((double(imageMatrix)-double(trueMatrix)).^2))/(trueMean*filtMean);
 
 end
 %%

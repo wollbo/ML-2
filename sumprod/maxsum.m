@@ -18,7 +18,7 @@ M = length(imageMatrix);
 
 % GF(2^k) noise
 
-pVec = 0.05:0.05:0.7;
+pVec = 0.1:0.1:0.7;
 P = length(pVec);
 for p = 1:P
 imageMatrix = trueMatrix;
@@ -43,11 +43,11 @@ for k = 1:K
     priorProbs(k,:) = normpdf(support,support(k),2);
 end
 
-% p(y|x) assuming x uniformly distributed, GF(2^K) noise case
-
-support = 1:256;
-K = length(support);
-priorProbs = 1/N * ones(K) + eye(K)*(1-pVec(p)-1/N);
+% % p(y|x) assuming x uniformly distributed, GF(2^K) noise case
+% 
+% support = 1:256;
+% K = length(support);
+% priorProbs = 1/N * ones(K) + eye(K)*(1-pVec(p)-1/N);
 
 % p(x(k)|x(k-1)) from histogram
 
@@ -75,6 +75,10 @@ imageMatrix2 = uint8(makeImage(indX,1));
 noisyMatrix = uint8(flippedMatrix);
 mse1 = mean(mean((double(imageMatrix2)-trueMatrix).^2));
 mse2 = mean(mean((double(noisyMatrix)-trueMatrix).^2));
+
+trueMean = mean(mean(double(trueMatrix)));
+filtMean = mean(mean(double(imageMatrix2)));
+nmseVec(p) = mean(mean((double(imageMatrix)-double(trueMatrix)).^2))/(trueMean*filtMean);
 
 ratio(p) = mse1/mse2;
 mseVec(p) = mse1;
