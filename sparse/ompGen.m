@@ -1,29 +1,16 @@
-%% init
-clear all
+function nmse = ompGen(x,y,A,k0)
 
-N = 30; % N<M
-M = 100;
-A = rand(N,M);
-x = zeros(M,1);
-indices = randperm(M,5);
-x(indices) = 10rand(1,1);
-b = A*x;
-
-
-
-%%
-
-alpha = 5; % a bit arbitrary
 r = b;
 S = [];
 f = A;
 epsilon = zeros(M,1);
 numSpace = 1:M;
 k = 0;
-k0 = 6;
+k0 = 10;
 rpast = r+1;
 numSpace = 1:M;
-%%
+
+
 for n = 1:M
     k = k+1;
     %[~,J1] = max(A'*r);
@@ -54,4 +41,4 @@ end
 xhat = zeros(M,1);
 xhat(S) = A(:,S)'*((A(:,S)*A(:,S)')\b);
 
-mean((xhat-x).^2)/(mean(xhat)*mean(x))
+nmse = mean((xhat-x).^2)/(mean(xhat)*mean(x))

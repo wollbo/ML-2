@@ -1,7 +1,7 @@
 %% init
 clear all
 
-N = 30; % N<M
+N = 30; % N<M och rimligtvis är N>k
 M = 100;
 A = rand(N,M);
 x = zeros(M,1);
@@ -13,7 +13,7 @@ b = A*x;
 
 %%
 
-alpha = 5; % a bit arbitrary
+alpha = 10^(-4); % a bit arbitrary
 r = b;
 S = [];
 f = A;
@@ -41,9 +41,9 @@ for n = 1:M
     xS = alphaS*b;
     rpast = r;
     r = b-A(:,S)*xS;
-    if (norm(r)>norm(rpast) || k>k0)
-        r = rpast;
-        S = S(1:end-1);
+    if (norm(r)<alpha || k>k0)%(norm(r)>norm(rpast) || k>k0)
+        %r = rpast;
+        %S = S(1:end-1);
         break
     else
         
