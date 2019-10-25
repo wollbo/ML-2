@@ -15,7 +15,7 @@ tic
 %%
 for l = 1:length(lambda)
 
-sigma1 = 300;
+sigma1 = 30000;
 for n = 1:5
     K_ensemble(:,:,n) = matGaussK(xDiff(xTrain(1+(n-1)*N:n*N,:)),sigma1);
     disp(n)

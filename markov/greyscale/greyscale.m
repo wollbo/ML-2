@@ -116,3 +116,20 @@ set(gca, 'XTick', 1:P); % Change x-axis ticks
 set(gca, 'XTickLabel', pVec);
 title('MSE ratio with respect to the pixel flip probability p')
 xlabel('p')
+
+%%
+
+pVec = 0.05:0.05:0.7;
+P = length(pVec);
+ratio = zeros(P,1);
+tic
+for p = 1:P
+imageMatrix = trueMatrix;
+flipM=binornd(1,pVec(p)*ones([L L]));
+flippedMatrix = imageMatrix;
+flipped = imageMatrix(flipM==1);
+flipped = randi(255,length(flipped),1,'uint8');
+flippedMatrix(flipM==1) = flipped;
+imageMatrix = flippedMatrix;
+mseP(p) = mean(mean((double(flippedMatrix)-double(trueMatrix)).^2));
+end
